@@ -42,8 +42,11 @@ public class GameController {
         this.restartPlayer(player);
         this.teleportPlayerToLobby(player);
         if (this.currentStatus != Status.LOBBY) {
+            ServerUtilities.sendBroadcastTitle("§7Espectador", "Espera al final");
             player.setGameMode(GameMode.SPECTATOR);
             this.currentArena.teleportPlayer(player);
+        } else {
+            ServerUtilities.sendBroadcastTitle("§d¡Bienvenido!", "Espera al comienzo");
         }
     }
 
@@ -145,7 +148,7 @@ public class GameController {
         this.currentArena.teleportPlayers();
         this.currentStatus = Status.FROZEN;
         KitController.getInstance().givePlayersKitSelector();
-        AtomicInteger remainingTime = new AtomicInteger(60);
+        AtomicInteger remainingTime = new AtomicInteger(30);
         new BukkitRunnable() {
             @Override
             public void run() {
@@ -165,7 +168,7 @@ public class GameController {
 
     public void gameStart() {
         this.currentStatus = Status.PLAYING;
-        ServerUtilities.sendBroadcastTitle("§bInicia el juego", "PvP en 60 s");
+        ServerUtilities.sendBroadcastTitle("§bInicia el juego", "PvP en 30 s");
         ServerUtilities.playBroadcastSound("mob.wither.spawn", 1, 2);
         this.currentArena.getWorld().getWorldBorder().setSize(this.currentArena.getMaxRadius());
         KitController.getInstance().givePlayersKits();
@@ -176,7 +179,7 @@ public class GameController {
         if (this.pvpEnabledTaskID != -1) {
             Bukkit.getScheduler().cancelTask(this.pvpEnabledTaskID);
         }
-        AtomicInteger remainingTime = new AtomicInteger(60);
+        AtomicInteger remainingTime = new AtomicInteger(30);
         this.pvpEnabledTaskID = new BukkitRunnable() {
             @Override
             public void run() {

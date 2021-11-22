@@ -1,11 +1,13 @@
 package dev.sasukector.hungergamesclassic.controllers;
 
+import dev.sasukector.hungergamesclassic.helpers.ServerUtilities;
 import dev.sasukector.hungergamesclassic.models.Kit;
 import lombok.Getter;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
@@ -19,6 +21,7 @@ public class KitController {
     private final @Getter List<Kit> kitList;
     private final @Getter Map<UUID, Kit> playersKits;
     private static final Random random = new Random();
+    private final @Getter Inventory inventory;
 
     public static KitController getInstance() {
         if (instance == null) {
@@ -30,7 +33,9 @@ public class KitController {
     public KitController() {
         this.kitList = new ArrayList<>();
         this.playersKits = new HashMap<>();
+        this.inventory = Bukkit.createInventory(null, 18, "§dSeleccionar Kit");
         this.createKits();
+        this.fillInventory();
     }
 
     public void givePlayersKitSelector() {
@@ -56,7 +61,10 @@ public class KitController {
                 Kit playerKit = this.playersKits.get(player.getUniqueId());
                 if (playerKit == null) {
                     playerKit = this.kitList.get(random.nextInt(this.kitList.size()));
+                    ServerUtilities.sendServerMessage(player, "No tienes un kit seleccionado, se asignó " +
+                            playerKit.getColor() + "§l" + playerKit.getName() + " §rpor defecto");
                 }
+                player.closeInventory();
                 player.getInventory().clear();
                 player.getEquipment().setArmorContents(playerKit.getArmorContents().clone());
                 PlayerInventory playerInventory = player.getInventory();
@@ -66,6 +74,16 @@ public class KitController {
                 player.updateInventory();
             }
         });
+    }
+
+    public Kit getKit(String name) {
+        Kit foundKit = null;
+        Optional<Kit> optionalKit = this.kitList.stream()
+                .filter(kit -> (kit.getColor() + kit.getName()).equals(name)).findFirst();
+        if (optionalKit.isPresent()) {
+            foundKit = optionalKit.get();
+        }
+        return foundKit;
     }
 
     private void createKits() {
@@ -96,6 +114,16 @@ public class KitController {
         cupid.addItem(cupid_1);
         cupid.addItem(trackingCompass.clone());
         this.kitList.add(cupid);
+    }
+
+    public void fillInventory() {
+        this.kitList.forEach(kit -> {
+            ItemStack itemStack = kit.getIcon().clone();
+            ItemMeta itemMeta = itemStack.getItemMeta();
+            itemMeta.setDisplayName(kit.getColor() + kit.getName());
+            itemStack.setItemMeta(itemMeta);
+            this.inventory.addItem(itemStack);
+        });
     }
 
 }
