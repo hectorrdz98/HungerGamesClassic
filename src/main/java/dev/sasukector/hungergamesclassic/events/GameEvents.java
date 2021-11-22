@@ -67,7 +67,8 @@ public class GameEvents implements Listener {
     public void onInventoryClick(InventoryClickEvent event) {
         if (event.getWhoClicked() instanceof Player) {
             Player player = (Player) event.getWhoClicked();
-            if (player.getGameMode() != GameMode.CREATIVE) {
+            if (player.getGameMode() != GameMode.CREATIVE &&
+                    GameController.getInstance().getCurrentStatus() != GameController.Status.PLAYING) {
                 event.setCancelled(true);
             }
             ItemStack itemStack = event.getCurrentItem();

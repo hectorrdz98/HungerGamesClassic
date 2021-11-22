@@ -8,6 +8,7 @@ import org.bukkit.*;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.github.paperspigot.Title;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,11 +43,11 @@ public class GameController {
         this.restartPlayer(player);
         this.teleportPlayerToLobby(player);
         if (this.currentStatus != Status.LOBBY) {
-            ServerUtilities.sendBroadcastTitle("§7Espectador", "Espera al final");
+            player.sendTitle(new Title("§7Espectador", "Espera al final"));
             player.setGameMode(GameMode.SPECTATOR);
             this.currentArena.teleportPlayer(player);
         } else {
-            ServerUtilities.sendBroadcastTitle("§d¡Bienvenido!", "Espera al comienzo");
+            player.sendTitle(new Title("§d¡Bienvenido!", "Espera al comienzo"));
         }
     }
 
