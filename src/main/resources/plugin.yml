@@ -1,0 +1,11 @@
+name: HungerGamesClassic
+version: '${project.version}'
+main: dev.sasukector.hungergamesclassic.HungerGamesClassic
+api-version: 1.17
+authors: [ Sasukector ]
+description: This is the core plugin for HungerGamesClassic
+website: https://sasukector.dev
+commands:
+  game:
+    description: Command to manage the game
+    usage: /game [option]
