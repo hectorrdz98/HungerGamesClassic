@@ -26,6 +26,7 @@ public class GameController {
     private final @Getter boolean streamerMode = false;
     private int pvpEnabledTaskID = -1;
     private int updateCompassTaskID = -1;
+    private int reduceBorderTaskID = -1;
     private final int minRequiredPlayers = 2;
     private boolean gameStarting = false;
 
@@ -190,6 +191,10 @@ public class GameController {
             Bukkit.getScheduler().cancelTask(this.updateCompassTaskID);
             this.updateCompassTaskID = -1;
         }
+        if (this.reduceBorderTaskID != -1) {
+            Bukkit.getScheduler().cancelTask(this.reduceBorderTaskID);
+            this.reduceBorderTaskID = -1;
+        }
     }
 
     public void teleportToGame() {
@@ -228,6 +233,7 @@ public class GameController {
         this.currentArena.getWorld().getWorldBorder().setSize(this.currentArena.getMaxRadius());
         KitController.getInstance().givePlayersKits();
         this.pvpEnabledScheduler();
+        this.reduceBorderScheduler();
     }
 
     public void pvpEnabledScheduler() {
@@ -316,6 +322,19 @@ public class GameController {
                 }
             }
         }.runTaskTimer(HungerGamesClassic.getInstance(), 0L, 20L).getTaskId();
+    }
+
+    public void reduceBorderScheduler() {
+        if (this.reduceBorderTaskID != -1) {
+            Bukkit.getScheduler().cancelTask(this.reduceBorderTaskID);
+        }
+        this.reduceBorderTaskID = new BukkitRunnable() {
+            @Override
+            public void run() {
+                ServerUtilities.sendBroadcastMessage("§5Reduciendo el borde");
+                currentArena.getWorld().getWorldBorder().setSize(currentArena.getLobbyRadius(), 5 * 60);
+            }
+        }.runTaskLater(HungerGamesClassic.getInstance(), 20L * 60 * 5).getTaskId();
     }
 
 }

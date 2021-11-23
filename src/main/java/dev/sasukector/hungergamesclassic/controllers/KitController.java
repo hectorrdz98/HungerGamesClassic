@@ -1,5 +1,6 @@
 package dev.sasukector.hungergamesclassic.controllers;
 
+import dev.sasukector.hungergamesclassic.HungerGamesClassic;
 import dev.sasukector.hungergamesclassic.helpers.ServerUtilities;
 import dev.sasukector.hungergamesclassic.models.Kit;
 import lombok.Getter;
@@ -26,6 +27,7 @@ public class KitController {
     private static KitController instance = null;
     private final @Getter List<Kit> kitList;
     private final @Getter Map<UUID, Kit> playersKits;
+    private final @Getter Map<UUID, Integer> playersTimers;
     private static final Random random = new Random();
     private final @Getter Inventory inventory;
 
@@ -39,9 +41,11 @@ public class KitController {
     public KitController() {
         this.kitList = new ArrayList<>();
         this.playersKits = new HashMap<>();
+        this.playersTimers = new HashMap<>();
         this.inventory = Bukkit.createInventory(null, 18, "§dSeleccionar Kit");
         this.createKits();
         this.fillInventory();
+        this.reducePlayerTimers();
     }
 
     public void givePlayersKitSelector() {
@@ -94,6 +98,23 @@ public class KitController {
             foundKit = optionalKit.get();
         }
         return foundKit;
+    }
+
+    public void reducePlayerTimers() {
+        Bukkit.getScheduler().runTaskTimer(HungerGamesClassic.getInstance(), () -> {
+            List<UUID> timersUUIDs = new ArrayList<>(playersTimers.keySet());
+            for (UUID timerUUID : timersUUIDs) {
+                if (Bukkit.getPlayer(timerUUID) == null) {
+                    playersTimers.remove(timerUUID);
+                } else {
+                    int newTimer = playersTimers.get(timerUUID) - 1;
+                    playersTimers.put(timerUUID, newTimer);
+                    if (newTimer <= 0) {
+                        playersTimers.remove(timerUUID);
+                    }
+                }
+            }
+        }, 0L, 20L);
     }
 
     private void createKits() {
