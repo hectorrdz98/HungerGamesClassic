@@ -26,7 +26,7 @@ public class GameController {
     private final @Getter boolean streamerMode = false;
     private int pvpEnabledTaskID = -1;
     private int updateCompassTaskID = -1;
-    private final int minRequiredPlayers = 1;
+    private final int minRequiredPlayers = 2;
     private boolean gameStarting = false;
 
     public enum Status {
