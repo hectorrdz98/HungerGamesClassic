@@ -109,6 +109,7 @@ public class SpawnEvents implements Listener {
                             GameController.getInstance().checkIfGamePossible();
                             player.getInventory().clear();
                             player.getEquipment().setArmorContents(new ItemStack[]{ null, null, null, null });
+                            player.updateInventory();
                         }
                     }
                 }
