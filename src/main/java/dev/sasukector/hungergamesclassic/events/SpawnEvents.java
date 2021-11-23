@@ -87,6 +87,10 @@ public class SpawnEvents implements Listener {
                 if (GameController.getInstance().getCurrentStatus() != GameController.Status.PLAYING) {
                     if (event.getPlayer().getGameMode() != GameMode.CREATIVE)
                         event.setCancelled(true);
+                } else {
+                    if (event.getClickedBlock().getType() == Material.ENDER_CHEST) {
+                        event.setCancelled(true);
+                    }
                 }
             }
         } else if (GameController.getInstance().getCurrentStatus() == GameController.Status.LOBBY) {
@@ -101,9 +105,10 @@ public class SpawnEvents implements Listener {
                             GameController.getInstance().getAlivePlayers().add(player.getUniqueId());
                             int currentQueuePlayers = GameController.getInstance().getAlivePlayers().size();
                             ServerUtilities.sendBroadcastMessage("§d§l" + player.getName() +
-                                    "§r§5 se unió a la cola [ §e§l" + currentQueuePlayers + " ☺ §r§5 ]");
+                                    "§r§5 se unió a la cola [ §e§l" + currentQueuePlayers + " §r§5]");
                             GameController.getInstance().checkIfGamePossible();
                             player.getInventory().clear();
+                            player.getEquipment().setArmorContents(new ItemStack[]{ null, null, null, null });
                         }
                     }
                 }

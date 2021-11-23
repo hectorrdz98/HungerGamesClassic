@@ -1,16 +1,27 @@
 package dev.sasukector.hungergamesclassic.models;
 
+import dev.sasukector.hungergamesclassic.controllers.ArenaController;
 import dev.sasukector.hungergamesclassic.controllers.GameController;
 import dev.sasukector.hungergamesclassic.helpers.ServerUtilities;
 import lombok.Getter;
 import net.lingala.zip4j.core.ZipFile;
 import org.apache.commons.io.FileUtils;
 import org.bukkit.*;
+import org.bukkit.block.Block;
+import org.bukkit.block.Chest;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.EnchantmentStorageMeta;
+import org.bukkit.potion.Potion;
+import org.bukkit.potion.PotionType;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Random;
+import java.util.stream.Collectors;
 
 public class Arena {
 
@@ -20,6 +31,7 @@ public class Arena {
     private final @Getter List<Location> chestLocations;
     private final @Getter int lobbyRadius;
     private final @Getter int maxRadius;
+    private final Random random = new Random();
 
     public Arena(String name, int[] spawnLocation, int lobbyRadius, int maxRadius) {
         this.name = name;
@@ -31,7 +43,41 @@ public class Arena {
     }
 
     public void fillChests() {
-
+        for (Location location : this.getChestLocations()) {
+            Block block = this.world.getBlockAt(location);
+            if (!(block.getType() == Material.CHEST || block.getType() == Material.TRAPPED_CHEST)) {
+                block.setType(Material.CHEST);
+            }
+            Chest chest = (Chest) block.getState();
+            List<ItemStack> itemsToAdd = new ArrayList<>(ArenaController.getInstance().getChestItems());
+            Collections.shuffle(itemsToAdd);
+            itemsToAdd = itemsToAdd.stream()
+                    .limit(random.nextInt(9) + 1).collect(Collectors.toList());
+            int totalItems = itemsToAdd.size();
+            while (totalItems < 27) {
+                itemsToAdd.add(new ItemStack(Material.AIR));
+                totalItems++;
+            }
+            Collections.shuffle(itemsToAdd);
+            for (int i = 0; i < 27; ++i) {
+                ItemStack item = itemsToAdd.get(i).clone();
+                if (item.getType() == Material.POTION) {
+                    PotionType potionType = ArenaController.getInstance().getRandomPotionType();
+                    if (potionType == null) continue;
+                    Potion potion = new Potion(1);
+                    potion.setSplash(true);
+                    potion.setType(potionType);
+                    potion.apply(item);
+                } else if (item.getType() == Material.ENCHANTED_BOOK) {
+                    Enchantment enchantment = ArenaController.getInstance().getRandomEnchantment();
+                    if (enchantment == null) continue;
+                    EnchantmentStorageMeta meta = (EnchantmentStorageMeta) item.getItemMeta();
+                    meta.addStoredEnchant(enchantment, 1, true);
+                    item.setItemMeta(meta);
+                }
+                chest.getBlockInventory().setItem(i, item);
+            }
+        }
     }
 
     public void teleportPlayers() {

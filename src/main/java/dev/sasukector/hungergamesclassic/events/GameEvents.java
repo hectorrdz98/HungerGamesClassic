@@ -1,6 +1,5 @@
 package dev.sasukector.hungergamesclassic.events;
 
-import dev.sasukector.hungergamesclassic.HungerGamesClassic;
 import dev.sasukector.hungergamesclassic.controllers.GameController;
 import dev.sasukector.hungergamesclassic.controllers.KitController;
 import dev.sasukector.hungergamesclassic.helpers.ServerUtilities;
@@ -13,7 +12,6 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -34,21 +32,13 @@ public class GameEvents implements Listener {
                     }
                 }
                 player.getInventory().clear();
+                player.getEquipment().setArmorContents(new ItemStack[]{ null, null, null, null });
                 player.updateInventory();
-                player.spigot().respawn();
-                GameController.getInstance().validateWin();
-            }
-        }
-    }
-
-    @EventHandler
-    public void onPlayerRespawn(PlayerRespawnEvent event) {
-        if (GameController.getInstance().getCurrentStatus() == GameController.Status.PLAYING) {
-            Player player = event.getPlayer();
-            if (!GameController.getInstance().getAlivePlayers().contains(player.getUniqueId())) {
+                ServerUtilities.sendBroadcastMessage("§c" + event.getDeathMessage());
+                player.setHealth(20);
                 player.setGameMode(GameMode.SPECTATOR);
-                Bukkit.getScheduler().runTaskLater(HungerGamesClassic.getInstance(), () ->
-                        GameController.getInstance().getCurrentArena().teleportPlayer(player), 5L);
+                GameController.getInstance().validateWin();
+                event.setDeathMessage(null);
             }
         }
     }

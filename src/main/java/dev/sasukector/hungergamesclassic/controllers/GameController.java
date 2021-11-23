@@ -13,9 +13,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.github.paperspigot.Title;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class GameController {
@@ -27,6 +25,7 @@ public class GameController {
     private @Getter boolean pvpEnabled = false;
     private final @Getter boolean streamerMode = false;
     private int pvpEnabledTaskID = -1;
+    private int updateCompassTaskID = -1;
     private final int minRequiredPlayers = 1;
     private boolean gameStarting = false;
 
@@ -76,6 +75,7 @@ public class GameController {
                         }
                     }
                 }, 5L);
+                this.validateWin();
             }
         }
     }
@@ -103,6 +103,7 @@ public class GameController {
         player.setStatistic(Statistic.DEATHS, 0);
         player.setBedSpawnLocation(ServerUtilities.getLobbySpawn());
         player.getInventory().clear();
+        player.getEquipment().setArmorContents(new ItemStack[]{ null, null, null, null });
         player.updateInventory();
     }
 
@@ -185,12 +186,17 @@ public class GameController {
             Bukkit.getScheduler().cancelTask(this.pvpEnabledTaskID);
             this.pvpEnabledTaskID = -1;
         }
+        if (this.updateCompassTaskID != -1) {
+            Bukkit.getScheduler().cancelTask(this.updateCompassTaskID);
+            this.updateCompassTaskID = -1;
+        }
     }
 
     public void teleportToGame() {
         this.currentArena.teleportPlayers();
         this.currentStatus = Status.FROZEN;
         KitController.getInstance().givePlayersKitSelector();
+        this.updatePlayerCompassSchedule();
         AtomicInteger remainingTime = new AtomicInteger(30);
         new BukkitRunnable() {
             @Override
@@ -283,7 +289,33 @@ public class GameController {
                 }
             }.runTaskTimer(HungerGamesClassic.getInstance(), 0L, 20L).getTaskId();
         }
+    }
 
+    public void updatePlayerCompassSchedule() {
+        if (this.updateCompassTaskID != -1) {
+            Bukkit.getScheduler().cancelTask(this.updateCompassTaskID);
+        }
+        this.updateCompassTaskID = new BukkitRunnable() {
+            @Override
+            public void run() {
+                for (UUID uuid : alivePlayers) {
+                    Player player = Bukkit.getPlayer(uuid);
+                    if (player == null) continue;
+                    Location location = player.getLocation();
+                    Optional<UUID> nearestPlayerUUID = alivePlayers.stream()
+                            .filter(nearUUID -> nearUUID != uuid && Bukkit.getPlayer(nearUUID) != null)
+                            .min(Comparator.comparingDouble(value -> {
+                                Player nearPlayer = Bukkit.getPlayer(value);
+                                return location.distance(nearPlayer.getLocation());
+                            }));
+                    if (nearestPlayerUUID.isPresent()) {
+                        Player nearestPlayer = Bukkit.getPlayer(nearestPlayerUUID.get());
+                        if (nearestPlayer == null) continue;
+                        player.setCompassTarget(nearestPlayer.getLocation());
+                    }
+                }
+            }
+        }.runTaskTimer(HungerGamesClassic.getInstance(), 0L, 20L).getTaskId();
     }
 
 }

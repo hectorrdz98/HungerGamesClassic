@@ -4,6 +4,7 @@ import dev.sasukector.hungergamesclassic.helpers.ServerUtilities;
 import dev.sasukector.hungergamesclassic.models.Kit;
 import lombok.Getter;
 import org.bukkit.Bukkit;
+import org.bukkit.DyeColor;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
@@ -12,6 +13,11 @@ import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.material.Dye;
+import org.bukkit.potion.Potion;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
+import org.bukkit.potion.PotionType;
 
 import java.util.*;
 
@@ -49,6 +55,7 @@ public class KitController {
             Player player = Bukkit.getPlayer(uuid);
             if (player != null) {
                 player.getInventory().clear();
+                player.getEquipment().setArmorContents(new ItemStack[]{ null, null, null, null });
                 player.getInventory().addItem(book.clone());
             }
         });
@@ -72,6 +79,9 @@ public class KitController {
                     playerInventory.addItem(itemStack.clone());
                 }
                 player.updateInventory();
+                for (PotionEffectType effectType : playerKit.getEffects()) {
+                    player.addPotionEffect(new PotionEffect(effectType, 99999, 0, false, false));
+                }
             }
         });
     }
@@ -98,22 +108,72 @@ public class KitController {
         enchanter.addItem(new ItemStack(Material.COOKED_BEEF, 2));
         enchanter.addItem(new ItemStack(Material.BOOKSHELF, 10));
         enchanter.addItem(new ItemStack(Material.EXP_BOTTLE, 16));
+        Dye dye = new Dye();
+        dye.setColor(DyeColor.BLUE);
+        ItemStack enchanter_1 = dye.toItemStack();
+        enchanter_1.setAmount(16);
+        enchanter.addItem(enchanter_1);
         enchanter.addItem(new ItemStack(Material.ENCHANTMENT_TABLE, 1));
         enchanter.addItem(new ItemStack(Material.STONE_SWORD, 1));
         enchanter.addItem(trackingCompass.clone());
+        enchanter.addArmor(null, new ItemStack(Material.LEATHER_CHESTPLATE), null, null);
         this.kitList.add(enchanter);
 
-        Kit cupid = new Kit(Kit.KitID.CUPID, "Cupid", "§7", new ItemStack(Material.RABBIT_FOOT));
-        cupid.addItem(new ItemStack(Material.COOKED_BEEF, 2));
-        ItemStack cupid_1 = new ItemStack(Material.PAPER);
-        cupid_1.addUnsafeEnchantment(Enchantment.ARROW_INFINITE, 1);
-        ItemMeta cupid_1_meta = cupid_1.getItemMeta();
-        cupid_1_meta.setDisplayName("§dSalto");
-        cupid_1_meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
-        cupid_1.setItemMeta(cupid_1_meta);
-        cupid.addItem(cupid_1);
-        cupid.addItem(trackingCompass.clone());
-        this.kitList.add(cupid);
+        Kit sonic = new Kit(Kit.KitID.SONIC, "Sonic", "§7", new ItemStack(Material.FEATHER));
+        sonic.addItem(new ItemStack(Material.WOOD_SWORD, 1));
+        sonic.addItem(new ItemStack(Material.APPLE, 2));
+        sonic.addItem(trackingCompass.clone());
+        sonic.addArmor(null, new ItemStack(Material.CHAINMAIL_CHESTPLATE), null, new ItemStack(Material.LEATHER_BOOTS));
+        sonic.getEffects().add(PotionEffectType.SPEED);
+        this.kitList.add(sonic);
+
+        Kit hermes = new Kit(Kit.KitID.HERMES, "Hermes", "§7", new ItemStack(Material.RABBIT_FOOT));
+        hermes.addItem(new ItemStack(Material.BREAD, 3));
+        hermes.addItem(new ItemStack(Material.WOOD_SWORD, 1));
+        ItemStack hermes_1 = new ItemStack(Material.PAPER);
+        hermes_1.addUnsafeEnchantment(Enchantment.ARROW_INFINITE, 1);
+        ItemMeta hermes_1_meta = hermes_1.getItemMeta();
+        hermes_1_meta.setDisplayName("§dSalto");
+        hermes_1_meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
+        hermes_1.setItemMeta(hermes_1_meta);
+        hermes.addItem(hermes_1);
+        hermes.addItem(trackingCompass.clone());
+        hermes.addArmor(new ItemStack(Material.LEATHER_HELMET), new ItemStack(Material.LEATHER_CHESTPLATE),
+                null, new ItemStack(Material.LEATHER_BOOTS));
+        this.kitList.add(hermes);
+
+        Kit chemist = new Kit(Kit.KitID.CHEMIST, "Chemist", "§7", new ItemStack(Material.POTION));
+        ItemStack chemist_1 = new ItemStack(Material.POTION, 2);
+        Potion chemist_1_pot = new Potion(1);
+        chemist_1_pot.setType(PotionType.WEAKNESS);
+        chemist_1_pot.setHasExtendedDuration(false);
+        chemist_1_pot.setSplash(true);
+        chemist_1_pot.apply(chemist_1);
+        chemist.addItem(chemist_1);
+        ItemStack chemist_2 = new ItemStack(Material.POTION, 1);
+        Potion chemist_2_pot = new Potion(1);
+        chemist_2_pot.setType(PotionType.POISON);
+        chemist_2_pot.setHasExtendedDuration(false);
+        chemist_2_pot.setSplash(true);
+        chemist_2_pot.apply(chemist_2);
+        chemist.addItem(chemist_2);
+        ItemStack chemist_3 = new ItemStack(Material.POTION, 1);
+        Potion chemist_3_pot = new Potion(1);
+        chemist_3_pot.setType(PotionType.SLOWNESS);
+        chemist_3_pot.setHasExtendedDuration(false);
+        chemist_3_pot.setSplash(true);
+        chemist_3_pot.apply(chemist_3);
+        chemist.addItem(chemist_3);
+        ItemStack chemist_4 = new ItemStack(Material.POTION, 1);
+        Potion chemist_4_pot = new Potion(1);
+        chemist_4_pot.setType(PotionType.INSTANT_DAMAGE);
+        chemist_4_pot.setLevel(2);
+        chemist_4_pot.setSplash(true);
+        chemist_4_pot.apply(chemist_4);
+        chemist.addItem(chemist_4);
+        chemist.addItem(trackingCompass.clone());
+        chemist.addArmor(null, null, null, null);
+        this.kitList.add(chemist);
     }
 
     public void fillInventory() {
