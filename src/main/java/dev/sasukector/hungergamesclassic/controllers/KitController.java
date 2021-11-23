@@ -140,7 +140,7 @@ public class KitController {
         enchanter.addArmor(null, new ItemStack(Material.LEATHER_CHESTPLATE), null, null);
         this.kitList.add(enchanter);
 
-        Kit sonic = new Kit(Kit.KitID.SONIC, "Sonic", "§7", new ItemStack(Material.FEATHER));
+        Kit sonic = new Kit(Kit.KitID.SONIC, "Sonic", "§7", new ItemStack(Material.SUGAR));
         sonic.addItem(new ItemStack(Material.WOOD_SWORD, 1));
         sonic.addItem(new ItemStack(Material.APPLE, 2));
         sonic.addItem(trackingCompass.clone());
