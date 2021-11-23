@@ -2,6 +2,7 @@ package dev.sasukector.hungergamesclassic;
 
 import dev.sasukector.hungergamesclassic.commands.GameCommand;
 import dev.sasukector.hungergamesclassic.events.GameEvents;
+import dev.sasukector.hungergamesclassic.events.KitEvents;
 import dev.sasukector.hungergamesclassic.events.SpawnEvents;
 import dev.sasukector.hungergamesclassic.helpers.ServerUtilities;
 import lombok.Getter;
@@ -13,6 +14,7 @@ import java.util.Objects;
 public final class HungerGamesClassic extends JavaPlugin {
 
     private static @Getter HungerGamesClassic instance;
+    public static String v = null;
 
     @Override
     public void onEnable() {
@@ -20,9 +22,13 @@ public final class HungerGamesClassic extends JavaPlugin {
         getLogger().info(ChatColor.DARK_PURPLE + "HungerGamesClassic startup!");
         instance = this;
 
+        v = Bukkit.getServer().getClass().getPackage().getName();
+        v = v.substring(v.lastIndexOf(".") + 1);
+
         // Register events
         this.getServer().getPluginManager().registerEvents(new SpawnEvents(), this);
         this.getServer().getPluginManager().registerEvents(new GameEvents(), this);
+        this.getServer().getPluginManager().registerEvents(new KitEvents(), this);
 
         // Register commands
         Objects.requireNonNull(HungerGamesClassic.getInstance().getCommand("game")).setExecutor(new GameCommand());

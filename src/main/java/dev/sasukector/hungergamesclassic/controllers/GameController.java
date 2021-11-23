@@ -27,7 +27,7 @@ public class GameController {
     private @Getter boolean pvpEnabled = false;
     private final @Getter boolean streamerMode = false;
     private int pvpEnabledTaskID = -1;
-    private final int minRequiredPlayers = 2;
+    private final int minRequiredPlayers = 1;
     private boolean gameStarting = false;
 
     public enum Status {
@@ -118,7 +118,7 @@ public class GameController {
 
     public void checkIfGamePossible() {
         if (this.currentStatus == Status.LOBBY && this.alivePlayers.size() >= this.minRequiredPlayers && !this.gameStarting) {
-            ServerUtilities.sendBroadcastMessage("§3Hay suficientes jugadores, §lteletransporte en 60 segundos al mapa");
+            ServerUtilities.sendBroadcastMessage("§3Hay suficientes jugadores");
             this.gameStarting = true;
             AtomicInteger remainingTime = new AtomicInteger(60);
             new BukkitRunnable() {
@@ -129,9 +129,10 @@ public class GameController {
                         cancel();
                     } else {
                         if (remainingTime.get() % 15 == 0 || remainingTime.get() <= 3) {
-                            ServerUtilities.sendBroadcastMessage("§3§lTeletransporte en " + remainingTime.get() + " segundos");
+                            ServerUtilities.sendBroadcastMessage("§3Teletransporte en §b" + remainingTime.get() + " segundos");
                             ServerUtilities.playBroadcastSound("note.hat", 1, 1);
                         }
+                        ServerUtilities.sendBroadcastAction("§3Teletransporte en §b" + remainingTime.get() + " s");
                         remainingTime.addAndGet(-1);
                     }
                 }
@@ -204,9 +205,10 @@ public class GameController {
                     cancel();
                 } else {
                     if (remainingTime.get() % 10 == 0 || remainingTime.get() <= 3) {
-                        ServerUtilities.sendBroadcastMessage("§3§lLa partida empieza en " + remainingTime.get() + " segundos");
+                        ServerUtilities.sendBroadcastMessage("§3La partida empieza en §b" + remainingTime.get() + " segundos");
                         ServerUtilities.playBroadcastSound("note.hat", 1, 1);
                     }
+                    ServerUtilities.sendBroadcastAction("§3Comienzo en §b" + remainingTime.get() + " s");
                     remainingTime.addAndGet(-1);
                 }
             }
@@ -232,14 +234,15 @@ public class GameController {
             public void run() {
                 if (remainingTime.get() <= 0) {
                     pvpEnabled = true;
-                    ServerUtilities.sendBroadcastMessage("§3§lPvP habilitado, buena suerte");
+                    ServerUtilities.sendBroadcastMessage("§6§lPvP habilitado, buena suerte");
                     ServerUtilities.playBroadcastSound("fireworks.blast", 1, 1);
                     cancel();
                 } else {
                     if (remainingTime.get() % 10 == 0 || remainingTime.get() <= 3) {
-                        ServerUtilities.sendBroadcastMessage("§3§lPvP habilitado en: " + remainingTime.get() + " segundos");
+                        ServerUtilities.sendBroadcastMessage("§3PvP habilitado en §b" + remainingTime.get() + " segundos");
                         ServerUtilities.playBroadcastSound("note.hat", 1, 1);
                     }
+                    ServerUtilities.sendBroadcastAction("§3PvP en §b" + remainingTime.get() + " s");
                     remainingTime.addAndGet(-1);
                 }
             }
@@ -266,7 +269,19 @@ public class GameController {
         if (validWin) {
             this.currentStatus = Status.LOBBY;
             ServerUtilities.sendBroadcastMessage("§3Regreso al lobby en 10 segundos");
-            Bukkit.getScheduler().runTaskLater(HungerGamesClassic.getInstance(), this::stopGame, 20L * 10);
+            AtomicInteger remainingTime = new AtomicInteger(10);
+            this.pvpEnabledTaskID = new BukkitRunnable() {
+                @Override
+                public void run() {
+                    if (remainingTime.get() <= 0) {
+                        stopGame();
+                        cancel();
+                    } else {
+                        ServerUtilities.sendBroadcastAction("§3Regreso en §b" + remainingTime.get() + " s");
+                        remainingTime.addAndGet(-1);
+                    }
+                }
+            }.runTaskTimer(HungerGamesClassic.getInstance(), 0L, 20L).getTaskId();
         }
 
     }
