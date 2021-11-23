@@ -1,5 +1,6 @@
 package dev.sasukector.hungergamesclassic.models;
 
+import dev.sasukector.hungergamesclassic.controllers.GameController;
 import dev.sasukector.hungergamesclassic.helpers.ServerUtilities;
 import lombok.Getter;
 import net.lingala.zip4j.core.ZipFile;
@@ -35,7 +36,13 @@ public class Arena {
 
     public void teleportPlayers() {
         Location location = new Location(this.world, this.spawnLocation[0], this.spawnLocation[1], this.spawnLocation[2]);
-        Bukkit.getOnlinePlayers().forEach(player -> player.teleport(location));
+        Bukkit.getOnlinePlayers().forEach(player -> {
+            player.teleport(location);
+            if (!GameController.getInstance().getAlivePlayers().contains(player.getUniqueId())) {
+                player.setGameMode(GameMode.SPECTATOR);
+                ServerUtilities.sendServerMessage(player, "§7Observarás la partida");
+            }
+        });
     }
 
     public void teleportPlayer(Player player) {

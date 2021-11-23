@@ -1,13 +1,11 @@
 package dev.sasukector.hungergamesclassic.events;
 
+import dev.sasukector.hungergamesclassic.HungerGamesClassic;
 import dev.sasukector.hungergamesclassic.controllers.GameController;
 import dev.sasukector.hungergamesclassic.controllers.KitController;
 import dev.sasukector.hungergamesclassic.helpers.ServerUtilities;
 import dev.sasukector.hungergamesclassic.models.Kit;
-import org.bukkit.Effect;
-import org.bukkit.GameMode;
-import org.bukkit.Material;
-import org.bukkit.Sound;
+import org.bukkit.*;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -30,6 +28,13 @@ public class GameEvents implements Listener {
                 GameController.getInstance().getAlivePlayers().remove(player.getUniqueId());
                 player.getWorld().playEffect(player.getLocation(), Effect.HEART, 128);
                 player.getWorld().playSound(player.getLocation(), Sound.BAT_DEATH, 1, 1);
+                for (ItemStack itemStack : player.getInventory().getContents()) {
+                    if (itemStack != null) {
+                        player.getWorld().dropItem(player.getLocation(), itemStack);
+                    }
+                }
+                player.getInventory().clear();
+                player.updateInventory();
                 player.spigot().respawn();
                 GameController.getInstance().validateWin();
             }
@@ -42,6 +47,8 @@ public class GameEvents implements Listener {
             Player player = event.getPlayer();
             if (!GameController.getInstance().getAlivePlayers().contains(player.getUniqueId())) {
                 player.setGameMode(GameMode.SPECTATOR);
+                Bukkit.getScheduler().runTaskLater(HungerGamesClassic.getInstance(), () ->
+                        GameController.getInstance().getCurrentArena().teleportPlayer(player), 5L);
             }
         }
     }

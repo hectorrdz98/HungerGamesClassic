@@ -5,8 +5,11 @@ import dev.sasukector.hungergamesclassic.helpers.ServerUtilities;
 import dev.sasukector.hungergamesclassic.models.Arena;
 import lombok.Getter;
 import org.bukkit.*;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.github.paperspigot.Title;
 
@@ -22,7 +25,10 @@ public class GameController {
     private final @Getter List<UUID> alivePlayers;
     private @Getter Arena currentArena = null;
     private @Getter boolean pvpEnabled = false;
+    private final @Getter boolean streamerMode = false;
     private int pvpEnabledTaskID = -1;
+    private final int minRequiredPlayers = 2;
+    private boolean gameStarting = false;
 
     public enum Status {
         LOBBY, WAITING, FROZEN, PLAYING
@@ -42,12 +48,17 @@ public class GameController {
     public void handlePlayerJoin(Player player) {
         this.restartPlayer(player);
         this.teleportPlayerToLobby(player);
-        if (this.currentStatus != Status.LOBBY) {
+        if (this.currentStatus == Status.FROZEN || this.currentStatus == Status.PLAYING) {
             player.sendTitle(new Title("§7Espectador", "Espera al final"));
             player.setGameMode(GameMode.SPECTATOR);
             this.currentArena.teleportPlayer(player);
         } else {
             player.sendTitle(new Title("§d¡Bienvenido!", "Espera al comienzo"));
+            ServerUtilities.sendServerMessage(player, "§3Bienvenido, haz click derecho con la espada para §bunirte a la cola§3.");
+            if (this.currentStatus == Status.WAITING) {
+                ServerUtilities.sendServerMessage(player, "§9¡Una partida está por empezar!");
+            }
+            this.givePlayerLobbyItems(player);
         }
     }
 
@@ -95,34 +106,62 @@ public class GameController {
         player.updateInventory();
     }
 
+    public void givePlayerLobbyItems(Player player) {
+        ItemStack joinQueue = new ItemStack(Material.STONE_SWORD);
+        joinQueue.addUnsafeEnchantment(Enchantment.ARROW_INFINITE, 1);
+        ItemMeta bookMeta = joinQueue.getItemMeta();
+        bookMeta.setDisplayName("§dUnirse a cola");
+        bookMeta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
+        joinQueue.setItemMeta(bookMeta);
+        player.getInventory().addItem(joinQueue.clone());
+    }
+
+    public void checkIfGamePossible() {
+        if (this.currentStatus == Status.LOBBY && this.alivePlayers.size() >= this.minRequiredPlayers && !this.gameStarting) {
+            ServerUtilities.sendBroadcastMessage("§3Hay suficientes jugadores, §lteletransporte en 60 segundos al mapa");
+            this.gameStarting = true;
+            AtomicInteger remainingTime = new AtomicInteger(60);
+            new BukkitRunnable() {
+                @Override
+                public void run() {
+                    if (remainingTime.get() <= 0) {
+                        preStartGame();
+                        cancel();
+                    } else {
+                        if (remainingTime.get() % 15 == 0 || remainingTime.get() <= 3) {
+                            ServerUtilities.sendBroadcastMessage("§3§lTeletransporte en " + remainingTime.get() + " segundos");
+                            ServerUtilities.playBroadcastSound("note.hat", 1, 1);
+                        }
+                        remainingTime.addAndGet(-1);
+                    }
+                }
+            }.runTaskTimer(HungerGamesClassic.getInstance(), 0L, 20L);
+        }
+    }
+
+    public void addAllPlayersToGame() {
+        this.alivePlayers.clear();
+        Bukkit.getOnlinePlayers().forEach(p -> {
+            p.playSound(p.getLocation(), "note.harp", 1, 1);
+            this.alivePlayers.add(p.getUniqueId());
+        });
+    }
+
     public void preStartGame() {
-        ServerUtilities.sendBroadcastMessage("§3§lPreparando la partida, teletransporte en 10 segundos al mapa");
         this.currentArena = ArenaController.getInstance().getRandomArena();
         this.currentArena.configureWorld();
         if (this.currentArena.getWorld() != null) {
             this.currentArena.fillChests();
             this.currentArena.getWorld().getWorldBorder().setSize(this.currentArena.getLobbyRadius());
 
-            this.alivePlayers.clear();
-            Bukkit.getOnlinePlayers().forEach(p -> {
-                p.playSound(p.getLocation(), "note.harp", 1, 1);
-                this.alivePlayers.add(p.getUniqueId());
-            });
+            Bukkit.getOnlinePlayers().forEach(this::restartPlayer);
+            if (this.streamerMode) {
+                this.addAllPlayersToGame();
+            }
 
             this.currentStatus = Status.WAITING;
             this.pvpEnabled = false;
-            AtomicInteger remainingTime = new AtomicInteger(10);
-            new BukkitRunnable() {
-                @Override
-                public void run() {
-                    if (remainingTime.get() <= 0) {
-                        teleportToGame();
-                        cancel();
-                    } else {
-                        remainingTime.addAndGet(-1);
-                    }
-                }
-            }.runTaskTimer(HungerGamesClassic.getInstance(), 0L, 20L);
+            this.teleportToGame();
         }
     }
 
@@ -131,9 +170,11 @@ public class GameController {
         ServerUtilities.playBroadcastSound("mob.wither.death", 1, 2);
         this.alivePlayers.clear();
         this.currentStatus = Status.LOBBY;
+        this.gameStarting = false;
         Bukkit.getOnlinePlayers().forEach(player -> {
             this.restartPlayer(player);
             this.teleportPlayerToLobby(player);
+            this.givePlayerLobbyItems(player);
             player.playSound(player.getLocation(), "note.harp", 1, 1);
         });
         this.currentArena.deleteWorld();
@@ -154,7 +195,12 @@ public class GameController {
             @Override
             public void run() {
                 if (remainingTime.get() <= 0) {
-                    gameStart();
+                    if (alivePlayers.size() >= minRequiredPlayers) {
+                        gameStart();
+                    } else {
+                        ServerUtilities.sendBroadcastMessage("§cNo hay suficientes jugadores, regresando al lobby");
+                        stopGame();
+                    }
                     cancel();
                 } else {
                     if (remainingTime.get() % 10 == 0 || remainingTime.get() <= 3) {
@@ -201,6 +247,7 @@ public class GameController {
     }
 
     public void validateWin() {
+        boolean validWin = false;
         if (this.alivePlayers.size() == 1) {
             Player winner = Bukkit.getPlayer(this.alivePlayers.get(0));
             if (winner != null) {
@@ -210,11 +257,18 @@ public class GameController {
                 ServerUtilities.sendBroadcastMessage("§bNo hay ganador, wtf, que raro...");
                 ServerUtilities.sendBroadcastTitle("§bNo hay ganador", "Wtf, nadie ganó");
             }
+            validWin = true;
         } else if (this.alivePlayers.size() == 0) {
             ServerUtilities.sendBroadcastMessage("§bNo hay ganador, wtf, que raro...");
             ServerUtilities.sendBroadcastTitle("§bNo hay ganador", "Wtf, nadie ganó");
+            validWin = true;
         }
-        this.stopGame();
+        if (validWin) {
+            this.currentStatus = Status.LOBBY;
+            ServerUtilities.sendBroadcastMessage("§3Regreso al lobby en 10 segundos");
+            Bukkit.getScheduler().runTaskLater(HungerGamesClassic.getInstance(), this::stopGame, 20L * 10);
+        }
+
     }
 
 }
