@@ -5,6 +5,7 @@ import dev.sasukector.hungergamesclassic.helpers.ServerUtilities;
 import dev.sasukector.hungergamesclassic.models.Kit;
 import lombok.Getter;
 import org.bukkit.Bukkit;
+import org.bukkit.Color;
 import org.bukkit.DyeColor;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
@@ -14,6 +15,7 @@ import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.inventory.meta.LeatherArmorMeta;
 import org.bukkit.material.Dye;
 import org.bukkit.potion.Potion;
 import org.bukkit.potion.PotionEffect;
@@ -218,6 +220,34 @@ public class KitController {
         treasure_hunter.addItem(trackingCompass.clone());
         treasure_hunter.addArmor(null, null, null, null);
         this.kitList.add(treasure_hunter);
+
+        Kit transporter = new Kit(Kit.KitID.TRANSPORTER, "Transporter", "§7", new ItemStack(Material.ENDER_PEARL));
+        transporter.addItem(new ItemStack(Material.ENDER_PEARL, 10));
+        ItemStack transporter_1 = new ItemStack(Material.WOOD_SWORD);
+        transporter_1.addUnsafeEnchantment(Enchantment.KNOCKBACK, 1);
+        transporter.addItem(transporter_1);
+        ItemStack transporter_2 = new ItemStack(Material.POTION, 3);
+        Potion transporter_2_pot = new Potion(1);
+        transporter_2_pot.setType(PotionType.INSTANT_HEAL);
+        transporter_2_pot.setHasExtendedDuration(false);
+        transporter_2_pot.setSplash(true);
+        transporter_2_pot.apply(transporter_2);
+        transporter.addItem(transporter_2);
+        transporter.addItem(trackingCompass.clone());
+        ItemStack transporter_3 = new ItemStack(Material.LEATHER_HELMET);
+        LeatherArmorMeta transporter_3_meta = (LeatherArmorMeta) transporter_3.getItemMeta();
+        transporter_3_meta.setColor(Color.WHITE);
+        transporter_3.setItemMeta(transporter_3_meta);
+        ItemStack transporter_4 = new ItemStack(Material.LEATHER_CHESTPLATE);
+        LeatherArmorMeta transporter_4_meta = (LeatherArmorMeta) transporter_4.getItemMeta();
+        transporter_4_meta.setColor(Color.WHITE);
+        transporter_4.setItemMeta(transporter_4_meta);
+        ItemStack transporter_5 = new ItemStack(Material.LEATHER_BOOTS);
+        LeatherArmorMeta transporter_5_meta = (LeatherArmorMeta) transporter_5.getItemMeta();
+        transporter_5_meta.setColor(Color.WHITE);
+        transporter_5.setItemMeta(transporter_5_meta);
+        transporter.addArmor(transporter_3, transporter_4, null, transporter_5);
+        this.kitList.add(transporter);
     }
 
     public void fillInventory() {
