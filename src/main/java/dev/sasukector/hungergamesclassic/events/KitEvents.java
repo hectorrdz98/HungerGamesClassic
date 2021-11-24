@@ -184,7 +184,7 @@ public class KitEvents implements Listener {
                     } break;
                     case SONIC: {
                         killer.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 20 * 5, 3, false, false));
-                        killer.addPotionEffect(new PotionEffect(PotionEffectType.REGENERATION, 20 * 2, 0, false, false));
+                        killer.addPotionEffect(new PotionEffect(PotionEffectType.REGENERATION, 20 * 5, 0, false, false));
                     } break;
                     case HERMES:
                     case TRANSPORTER: {
