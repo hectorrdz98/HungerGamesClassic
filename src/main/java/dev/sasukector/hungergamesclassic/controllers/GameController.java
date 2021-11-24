@@ -122,7 +122,7 @@ public class GameController {
         if (this.currentStatus == Status.LOBBY && this.alivePlayers.size() >= this.minRequiredPlayers && !this.gameStarting) {
             ServerUtilities.sendBroadcastMessage("§3Hay suficientes jugadores");
             this.gameStarting = true;
-            AtomicInteger remainingTime = new AtomicInteger(60);
+            AtomicInteger remainingTime = new AtomicInteger(30);
             new BukkitRunnable() {
                 @Override
                 public void run() {

@@ -31,19 +31,29 @@ public class Arena {
     private final @Getter List<Location> chestLocations;
     private final @Getter int lobbyRadius;
     private final @Getter int maxRadius;
+    private final @Getter int maxChests;
     private final Random random = new Random();
 
-    public Arena(String name, int[] spawnLocation, int lobbyRadius, int maxRadius) {
+    public Arena(String name, int[] spawnLocation, int lobbyRadius, int maxRadius, int maxChests) {
         this.name = name;
         this.spawnLocation = spawnLocation;
         this.lobbyRadius = lobbyRadius;
         this.maxRadius = maxRadius;
+        this.maxChests = maxChests;
         this.chestLocations = new ArrayList<>();
         this.world = null;
     }
 
     public void fillChests() {
-        for (Location location : this.getChestLocations()) {
+        List<Location> allChests = new ArrayList<>(this.getChestLocations());
+        while (allChests.size() < this.maxChests) {
+            int x = random.nextInt(2 * this.maxRadius) - this.maxRadius;
+            int z = random.nextInt(2 * this.maxRadius) - this.maxRadius;
+            Location newLocation = ServerUtilities.getSafeLocation(new Location(this.world, x, 0, z));
+            if (newLocation == null) continue;
+            allChests.add(newLocation);
+        }
+        for (Location location : allChests) {
             Block block = this.world.getBlockAt(location);
             if (!(block.getType() == Material.CHEST || block.getType() == Material.TRAPPED_CHEST)) {
                 block.setType(Material.CHEST);

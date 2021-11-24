@@ -4,10 +4,8 @@ import com.google.common.io.Files;
 import dev.sasukector.hungergamesclassic.HungerGamesClassic;
 import lombok.Getter;
 import lombok.Setter;
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.Location;
-import org.bukkit.World;
+import org.bukkit.*;
+import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.github.paperspigot.Title;
 
@@ -17,6 +15,8 @@ import java.lang.reflect.Method;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class ServerUtilities {
 
@@ -88,6 +88,32 @@ public class ServerUtilities {
             return Bukkit.getWorld(worldsNames.get(worldAlias));
         }
         return null;
+    }
+
+    public static Location getSafeLocation(Location location) {
+        List<Integer> ys = Stream.iterate(2, n -> n + 1).limit(100)
+                .sorted(Collections.reverseOrder()).collect(Collectors.toList());
+        Location newLocation = null;
+        for (int y : ys) {
+            location.setY(y);
+            Block cBlock = location.getBlock();
+            Block tBlock = location.add(0, 1, 0).getBlock();
+            Block lBlock = location.add(0, -2, 0).getBlock();
+            if (cBlock.getType() == Material.WATER && tBlock.getType() == Material.WATER &&
+                    lBlock.getType().isSolid() && lBlock.getType() != Material.BARRIER
+            ) {
+                location.setY(y);
+                newLocation = location;
+                break;
+            } else if (cBlock.getType() == Material.AIR && tBlock.getType() == Material.AIR &&
+                    lBlock.getType().isSolid() && lBlock.getType() != Material.BARRIER
+            ) {
+                location.setY(y);
+                newLocation = location;
+                break;
+            }
+        }
+        return newLocation;
     }
 
     public static void copyFile(String from, String to) throws IOException {
