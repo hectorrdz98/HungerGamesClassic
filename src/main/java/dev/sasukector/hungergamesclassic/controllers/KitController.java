@@ -407,8 +407,8 @@ public class KitController {
         LeatherArmorMeta katniss_3_meta = (LeatherArmorMeta) katniss_3.getItemMeta();
         katniss_3_meta.setColor(Color.RED);
         katniss_3.setItemMeta(katniss_3_meta);
-        katniss.addArmor(katniss_1, new ItemStack(Material.GOLD_CHESTPLATE),
-                new ItemStack(Material.GOLD_LEGGINGS), katniss_2);
+        katniss.addArmor(katniss_2, new ItemStack(Material.GOLD_CHESTPLATE),
+                new ItemStack(Material.GOLD_LEGGINGS), katniss_3);
         katniss.getEffects().add(PotionEffectType.NIGHT_VISION);
         this.kitList.add(katniss);
     }

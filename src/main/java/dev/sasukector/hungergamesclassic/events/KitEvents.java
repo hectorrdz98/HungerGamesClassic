@@ -133,7 +133,7 @@ public class KitEvents implements Listener {
                         if (playerKit.getId() == Kit.KitID.KATNISS) {
                             if (this.usableAgain(player)) {
                                 player.playSound(player.getLocation(), Sound.BLAZE_BREATH, 1, 2);
-                                KitController.getInstance().getPlayersTimers().put(player.getUniqueId(), 15);
+                                KitController.getInstance().getPlayersTimers().put(player.getUniqueId(), 30);
                             }
                         } else {
                             player.playSound(player.getLocation(), Sound.ANVIL_BREAK, 1, 2);
@@ -154,8 +154,11 @@ public class KitEvents implements Listener {
                     Kit playerKit = KitController.getInstance().getPlayersKits().get(shooter.getUniqueId());
                     if (playerKit == null) return;
                     if (KitController.getInstance().getPlayersTimers().get(shooter.getUniqueId()) != null) {
-                        shooter.playSound(shooter.getLocation(), Sound.BLAZE_BREATH, 1, 2);
-                        event.getProjectile().setFireTicks(9999);
+                        int timer = KitController.getInstance().getPlayersTimers().get(shooter.getUniqueId());
+                        if (timer >= 25) {
+                            shooter.playSound(shooter.getLocation(), Sound.BLAZE_BREATH, 1, 2);
+                            event.getProjectile().setFireTicks(9999);
+                        }
                     }
                 }
             }
