@@ -180,6 +180,7 @@ public class KitEvents implements Listener {
                         ItemStack lapis = dye.toItemStack();
                         lapis.setAmount(random.nextInt(4) + 1);
                         killer.getInventory().addItem(lapis);
+                        killer.getInventory().addItem(new ItemStack(Material.COOKED_BEEF, 2));
                     } break;
                     case SONIC: {
                         killer.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 20 * 5, 3, false, false));
