@@ -208,7 +208,7 @@ public class KitController {
         warrior.addItem(new ItemStack(Material.COOKED_BEEF, 2));
         warrior.addItem(trackingCompass.clone());
         warrior.addArmor(null, null, new ItemStack(Material.LEATHER_LEGGINGS), null);
-        this.kitList.add(pyro);
+        this.kitList.add(warrior);
     }
 
     public void fillInventory() {
