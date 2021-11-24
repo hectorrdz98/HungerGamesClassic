@@ -230,7 +230,7 @@ public class KitController {
         Potion transporter_2_pot = new Potion(1);
         transporter_2_pot.setType(PotionType.INSTANT_HEAL);
         transporter_2_pot.setHasExtendedDuration(false);
-        transporter_2_pot.setSplash(true);
+        transporter_2_pot.setSplash(false);
         transporter_2_pot.apply(transporter_2);
         transporter.addItem(transporter_2);
         transporter.addItem(trackingCompass.clone());
