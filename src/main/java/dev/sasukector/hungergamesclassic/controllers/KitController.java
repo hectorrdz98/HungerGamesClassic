@@ -248,6 +248,16 @@ public class KitController {
         transporter_5.setItemMeta(transporter_5_meta);
         transporter.addArmor(transporter_3, transporter_4, null, transporter_5);
         this.kitList.add(transporter);
+
+        Kit hunter = new Kit(Kit.KitID.HUNTER, "Hunter", "§7", new ItemStack(Material.COOKED_BEEF));
+        hunter.addItem(new ItemStack(Material.COOKED_BEEF, 2));
+        ItemStack hunter_1 = new ItemStack(Material.STONE_SWORD);
+        hunter_1.addUnsafeEnchantment(Enchantment.KNOCKBACK, 1);
+        hunter.addItem(hunter_1);
+        hunter.addItem(trackingCompass.clone());
+        hunter.addArmor(null, new ItemStack(Material.LEATHER_CHESTPLATE), new ItemStack(Material.LEATHER_LEGGINGS), null);
+        hunter.getEffects().add(PotionEffectType.INCREASE_DAMAGE);
+        this.kitList.add(hunter);
     }
 
     public void fillInventory() {
