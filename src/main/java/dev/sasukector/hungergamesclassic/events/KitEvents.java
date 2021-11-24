@@ -194,9 +194,12 @@ public class KitEvents implements Listener {
                     case CHEMIST:
                     case PYRO:
                     case WARRIOR:
-                    case TREASURE_HUNTER:
                     case HUNTER: {
                         killer.getInventory().addItem(new ItemStack(Material.COOKED_BEEF, 2));
+                    } break;
+                    case TREASURE_HUNTER: {
+                        killer.getInventory().addItem(new ItemStack(Material.COOKED_BEEF, 2));
+                        killer.getInventory().addItem(new ItemStack(Material.DIAMOND, random.nextInt(3) + 1));
                     } break;
                     case HAWKEYE:
                     case KATNISS: {
