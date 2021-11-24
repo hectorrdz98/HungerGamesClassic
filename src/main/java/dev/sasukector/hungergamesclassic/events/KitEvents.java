@@ -122,7 +122,7 @@ public class KitEvents implements Listener {
                         if (playerKit.getId() == Kit.KitID.HAWKEYE) {
                             if (this.usableAgain(player)) {
                                 player.playSound(player.getLocation(), Sound.SILVERFISH_KILL, 1, 2);
-                                player.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY, 20 * 5, 0, false, false));
+                                player.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY, 20 * 10, 0, false, false));
                                 KitController.getInstance().getPlayersTimers().put(player.getUniqueId(), 15);
                             }
                         } else {
@@ -137,7 +137,7 @@ public class KitEvents implements Listener {
                             }
                         } else {
                             player.playSound(player.getLocation(), Sound.ANVIL_BREAK, 1, 2);
-                            ServerUtilities.sendActionBar(player, "§4No eres kit §cHAWKEYE");
+                            ServerUtilities.sendActionBar(player, "§4No eres kit §cKATNISS");
                         }
                     }
                 }
