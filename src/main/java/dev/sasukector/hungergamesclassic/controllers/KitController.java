@@ -209,6 +209,15 @@ public class KitController {
         warrior.addItem(trackingCompass.clone());
         warrior.addArmor(null, null, new ItemStack(Material.LEATHER_LEGGINGS), null);
         this.kitList.add(warrior);
+
+        Kit treasure_hunter = new Kit(Kit.KitID.TREASURE_HUNTER, "Treasure Hunter", "§7", new ItemStack(Material.MAP));
+        treasure_hunter.addItem(new ItemStack(Material.MAP, 1));
+        treasure_hunter.addItem(new ItemStack(Material.BREAD, 5));
+        treasure_hunter.addItem(new ItemStack(Material.WOOD_SWORD, 1));
+        treasure_hunter.addItem(new ItemStack(Material.COOKED_BEEF, 2));
+        treasure_hunter.addItem(trackingCompass.clone());
+        treasure_hunter.addArmor(null, null, null, null);
+        this.kitList.add(treasure_hunter);
     }
 
     public void fillInventory() {
