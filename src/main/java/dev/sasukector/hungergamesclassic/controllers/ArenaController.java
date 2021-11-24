@@ -140,6 +140,8 @@ public class ArenaController {
         this.chestItems.add(new ItemStack(Material.GOLD_SWORD));
         this.chestItems.add(new ItemStack(Material.POTION));
         this.chestItems.add(new ItemStack(Material.ENCHANTED_BOOK));
+        this.chestItems.add(new ItemStack(Material.BOW));
+        this.chestItems.add(new ItemStack(Material.ARROW));
         // Armor
         this.chestItems.add(new ItemStack(Material.LEATHER_HELMET));
         this.chestItems.add(new ItemStack(Material.LEATHER_CHESTPLATE));
