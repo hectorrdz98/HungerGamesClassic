@@ -256,6 +256,7 @@ public class KitController {
         hunter.addItem(trackingCompass.clone());
         hunter.addArmor(null, new ItemStack(Material.LEATHER_CHESTPLATE), new ItemStack(Material.LEATHER_LEGGINGS), null);
         hunter.getEffects().add(PotionEffectType.INCREASE_DAMAGE);
+        hunter.getEffects().add(PotionEffectType.SLOW);
         this.kitList.add(hunter);
     }
 

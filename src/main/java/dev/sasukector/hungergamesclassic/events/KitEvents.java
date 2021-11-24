@@ -34,8 +34,7 @@ public class KitEvents implements Listener {
                 } else if (event.getCause() == EntityDamageEvent.DamageCause.FIRE ||
                         event.getCause() == EntityDamageEvent.DamageCause.FIRE_TICK) {
                     if (playerKit.getId() == Kit.KitID.PYRO) {
-                        event.setCancelled(true);
-                        player.addPotionEffect(new PotionEffect(PotionEffectType.INCREASE_DAMAGE, 20 * 2, 0, false, false));
+                        player.addPotionEffect(new PotionEffect(PotionEffectType.INCREASE_DAMAGE, 20 * 3, 0, false, false));
                     }
                 }
             }
