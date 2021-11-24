@@ -195,6 +195,13 @@ public class KitController {
         chemist.addItem(trackingCompass.clone());
         chemist.addArmor(null, null, null, null);
         this.kitList.add(chemist);
+
+        Kit pyro = new Kit(Kit.KitID.PYRO, "Pyro", "§7", new ItemStack(Material.BLAZE_POWDER));
+        pyro.addItem(new ItemStack(Material.FLINT_AND_STEEL, 1));
+        pyro.addItem(new ItemStack(Material.APPLE, 3));
+        pyro.addItem(trackingCompass.clone());
+        pyro.addArmor(null, null, null, null);
+        this.kitList.add(pyro);
     }
 
     public void fillInventory() {

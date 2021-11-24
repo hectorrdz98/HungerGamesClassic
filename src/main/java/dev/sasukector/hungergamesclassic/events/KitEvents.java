@@ -14,6 +14,8 @@ import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 import org.bukkit.util.Vector;
 
 public class KitEvents implements Listener {
@@ -28,6 +30,12 @@ public class KitEvents implements Listener {
                 if (event.getCause() == EntityDamageEvent.DamageCause.FALL) {
                     if (playerKit.getId() == Kit.KitID.HERMES) {
                         event.setCancelled(true);
+                    }
+                } else if (event.getCause() == EntityDamageEvent.DamageCause.FIRE ||
+                        event.getCause() == EntityDamageEvent.DamageCause.FIRE_TICK) {
+                    if (playerKit.getId() == Kit.KitID.PYRO) {
+                        event.setCancelled(true);
+                        player.addPotionEffect(new PotionEffect(PotionEffectType.INCREASE_DAMAGE, 20 * 3, 1, false, false));
                     }
                 }
             }
