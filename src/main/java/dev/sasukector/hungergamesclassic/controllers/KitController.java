@@ -153,7 +153,7 @@ public class KitController {
         sonic_1.addUnsafeEnchantment(Enchantment.DAMAGE_ALL, 2);
         sonic_1.addUnsafeEnchantment(Enchantment.KNOCKBACK, 2);
         sonic.addItem(sonic_1);
-        sonic.addItem(new ItemStack(Material.APPLE, 4));
+        sonic.addItem(new ItemStack(Material.APPLE, 16));
         sonic.addItem(trackingCompass.clone());
         ItemStack sonic_2 = new ItemStack(Material.LEATHER_HELMET);
         sonic_2.addUnsafeEnchantment(Enchantment.PROTECTION_ENVIRONMENTAL, 2);
@@ -166,7 +166,8 @@ public class KitController {
         LeatherArmorMeta sonic_3_meta = (LeatherArmorMeta) sonic_3.getItemMeta();
         sonic_3_meta.setColor(Color.BLUE);
         sonic_3.setItemMeta(sonic_3_meta);
-        sonic.addArmor(sonic_2, null, new ItemStack(Material.CHAINMAIL_LEGGINGS), sonic_3);
+        sonic.addArmor(sonic_2, new ItemStack(Material.CHAINMAIL_CHESTPLATE),
+                new ItemStack(Material.CHAINMAIL_LEGGINGS), sonic_3);
         sonic.getEffects().add(PotionEffectType.SPEED);
         sonic.getEffects().add(PotionEffectType.JUMP);
         this.kitList.add(sonic);
