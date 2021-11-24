@@ -202,6 +202,13 @@ public class KitController {
         pyro.addItem(trackingCompass.clone());
         pyro.addArmor(null, null, null, null);
         this.kitList.add(pyro);
+
+        Kit warrior = new Kit(Kit.KitID.WARRIOR, "Warrior", "§7", new ItemStack(Material.STONE_SWORD));
+        warrior.addItem(new ItemStack(Material.STONE_SWORD, 1));
+        warrior.addItem(new ItemStack(Material.COOKED_BEEF, 3));
+        warrior.addItem(trackingCompass.clone());
+        warrior.addArmor(null, null, new ItemStack(Material.LEATHER_LEGGINGS), null);
+        this.kitList.add(pyro);
     }
 
     public void fillInventory() {
