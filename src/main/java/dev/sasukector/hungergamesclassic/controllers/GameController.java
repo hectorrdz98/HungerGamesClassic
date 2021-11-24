@@ -27,7 +27,7 @@ public class GameController {
     private int pvpEnabledTaskID = -1;
     private int updateCompassTaskID = -1;
     private int reduceBorderTaskID = -1;
-    private final int minRequiredPlayers = 1;
+    private final int minRequiredPlayers = 2;
     private boolean gameStarting = false;
 
     public enum Status {
