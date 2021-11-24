@@ -28,14 +28,14 @@ public class KitEvents implements Listener {
                 Kit playerKit = KitController.getInstance().getPlayersKits().get(player.getUniqueId());
                 if (playerKit == null) return;
                 if (event.getCause() == EntityDamageEvent.DamageCause.FALL) {
-                    if (playerKit.getId() == Kit.KitID.HERMES) {
+                    if (playerKit.getId() == Kit.KitID.HERMES || playerKit.getId() == Kit.KitID.TRANSPORTER) {
                         event.setCancelled(true);
                     }
                 } else if (event.getCause() == EntityDamageEvent.DamageCause.FIRE ||
                         event.getCause() == EntityDamageEvent.DamageCause.FIRE_TICK) {
                     if (playerKit.getId() == Kit.KitID.PYRO) {
                         event.setCancelled(true);
-                        player.addPotionEffect(new PotionEffect(PotionEffectType.INCREASE_DAMAGE, 20 * 3, 1, false, false));
+                        player.addPotionEffect(new PotionEffect(PotionEffectType.INCREASE_DAMAGE, 20 * 2, 0, false, false));
                     }
                 }
             }
