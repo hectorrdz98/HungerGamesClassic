@@ -50,10 +50,8 @@ public class SpawnEvents implements Listener {
     public void onEntityDamage(EntityDamageEvent event) {
         if (GameController.getInstance().getCurrentStatus() != GameController.Status.PLAYING) {
             event.setCancelled(true);
-        } else if (event.getCause() == EntityDamageEvent.DamageCause.ENTITY_ATTACK) {
-            if (!GameController.getInstance().isPvpEnabled()) {
-                event.setCancelled(true);
-            }
+        } else if (!GameController.getInstance().isPvpEnabled()) {
+            event.setCancelled(true);
         }
     }
 

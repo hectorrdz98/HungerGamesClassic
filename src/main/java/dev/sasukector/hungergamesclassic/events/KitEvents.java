@@ -68,6 +68,17 @@ public class KitEvents implements Listener {
             Player player = event.getPlayer();
             if(event.getAction() == Action.RIGHT_CLICK_AIR) {
                 ItemStack itemStack = player.getItemInHand();
+                if (itemStack != null && itemStack.getType() == Material.ENDER_PEARL) {
+                    if (KitController.getInstance().getEnderpearlTimers().get(player.getUniqueId()) != null) {
+                        player.playSound(player.getLocation(), Sound.ANVIL_BREAK, 1, 2);
+                        ServerUtilities.sendActionBar(player, "§4Usable en §c" +
+                                KitController.getInstance().getEnderpearlTimers().get(player.getUniqueId()) +
+                                " s");
+                        event.setCancelled(true);
+                    } else {
+                        KitController.getInstance().getEnderpearlTimers().put(player.getUniqueId(), 5);
+                    }
+                }
                 if (itemStack != null && itemStack.hasItemMeta()) {
                     ItemMeta itemMeta = itemStack.getItemMeta();
                     Kit playerKit = KitController.getInstance().getPlayersKits().get(player.getUniqueId());

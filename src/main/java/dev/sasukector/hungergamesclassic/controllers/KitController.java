@@ -30,6 +30,7 @@ public class KitController {
     private final @Getter List<Kit> kitList;
     private final @Getter Map<UUID, Kit> playersKits;
     private final @Getter Map<UUID, Integer> playersTimers;
+    private final @Getter Map<UUID, Integer> enderpearlTimers;
     private static final Random random = new Random();
     private final @Getter Inventory inventory;
 
@@ -44,6 +45,7 @@ public class KitController {
         this.kitList = new ArrayList<>();
         this.playersKits = new HashMap<>();
         this.playersTimers = new HashMap<>();
+        this.enderpearlTimers = new HashMap<>();
         this.inventory = Bukkit.createInventory(null, 18, "§dSeleccionar Kit");
         this.createKits();
         this.fillInventory();
@@ -104,19 +106,24 @@ public class KitController {
 
     public void reducePlayerTimers() {
         Bukkit.getScheduler().runTaskTimer(HungerGamesClassic.getInstance(), () -> {
-            List<UUID> timersUUIDs = new ArrayList<>(playersTimers.keySet());
-            for (UUID timerUUID : timersUUIDs) {
-                if (Bukkit.getPlayer(timerUUID) == null) {
-                    playersTimers.remove(timerUUID);
-                } else {
-                    int newTimer = playersTimers.get(timerUUID) - 1;
-                    playersTimers.put(timerUUID, newTimer);
-                    if (newTimer <= 0) {
-                        playersTimers.remove(timerUUID);
-                    }
+            reduceTimer(playersTimers);
+            reduceTimer(enderpearlTimers);
+        }, 0L, 20L);
+    }
+
+    public void reduceTimer(Map<UUID, Integer> timers) {
+        List<UUID> uuids = new ArrayList<>(timers.keySet());
+        for (UUID timerUUID : uuids) {
+            if (Bukkit.getPlayer(timerUUID) == null) {
+                timers.remove(timerUUID);
+            } else {
+                int newTimer = timers.get(timerUUID) - 1;
+                timers.put(timerUUID, newTimer);
+                if (newTimer <= 0) {
+                    timers.remove(timerUUID);
                 }
             }
-        }, 0L, 20L);
+        }
     }
 
     private void createKits() {
@@ -242,14 +249,12 @@ public class KitController {
         ItemStack chemist_6 = new ItemStack(Material.POTION, 2);
         Potion chemist_6_pot = new Potion(1);
         chemist_6_pot.setType(PotionType.INSTANT_HEAL);
-        chemist_6_pot.setLevel(2);
         chemist_6_pot.setSplash(true);
         chemist_6_pot.apply(chemist_6);
         chemist.addItem(chemist_6);
         ItemStack chemist_7 = new ItemStack(Material.POTION, 2);
         Potion chemist_7_pot = new Potion(1);
         chemist_7_pot.setType(PotionType.REGEN);
-        chemist_7_pot.setLevel(2);
         chemist_7_pot.setSplash(true);
         chemist_7_pot.apply(chemist_7);
         chemist.addItem(chemist_7);
