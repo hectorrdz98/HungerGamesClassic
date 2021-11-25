@@ -90,7 +90,6 @@ public class KitEvents implements Listener {
                                 ItemStack potion = new ItemStack(Material.POTION, 1);
                                 Potion potion_pot = new Potion(1);
                                 potion_pot.setType(ArenaController.getInstance().getRandomPotionType());
-                                potion_pot.setLevel(2);
                                 potion_pot.setSplash(true);
                                 potion_pot.apply(potion);
                                 player.getInventory().addItem(potion);

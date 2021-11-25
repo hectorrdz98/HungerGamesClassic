@@ -169,7 +169,6 @@ public class KitController {
         sonic.addArmor(sonic_2, new ItemStack(Material.CHAINMAIL_CHESTPLATE),
                 new ItemStack(Material.CHAINMAIL_LEGGINGS), sonic_3);
         sonic.getEffects().add(PotionEffectType.SPEED);
-        sonic.getEffects().add(PotionEffectType.JUMP);
         this.kitList.add(sonic);
 
         Kit hermes = new Kit(Kit.KitID.HERMES, "Hermes", "§7", new ItemStack(Material.RABBIT_FOOT));
@@ -339,7 +338,7 @@ public class KitController {
         transporter.addArmor(transporter_3, transporter_4, new ItemStack(Material.IRON_LEGGINGS), transporter_5);
         this.kitList.add(transporter);
 
-        Kit hunter = new Kit(Kit.KitID.HUNTER, "Hunter", "§7", new ItemStack(Material.COOKED_BEEF));
+        /*Kit hunter = new Kit(Kit.KitID.HUNTER, "Hunter", "§7", new ItemStack(Material.COOKED_BEEF));
         ItemStack hunter_1 = new ItemStack(Material.STONE_SWORD);
         hunter_1.addUnsafeEnchantment(Enchantment.KNOCKBACK, 1);
         hunter.addItem(hunter_1);
@@ -356,7 +355,7 @@ public class KitController {
         hunter.addArmor(new ItemStack(Material.CHAINMAIL_HELMET), hunter_2, hunter_3, new ItemStack(Material.CHAINMAIL_BOOTS));
         hunter.getEffects().add(PotionEffectType.INCREASE_DAMAGE);
         hunter.getEffects().add(PotionEffectType.SLOW);
-        this.kitList.add(hunter);
+        this.kitList.add(hunter);*/
 
         Kit hawkeye = new Kit(Kit.KitID.HAWKEYE, "Hawkeye", "§7", new ItemStack(Material.BOW));
         hawkeye.addItem(new ItemStack(Material.BOW, 1));
