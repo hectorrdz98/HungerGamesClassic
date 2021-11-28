@@ -117,8 +117,9 @@ public class KitEvents implements Listener {
                                 Arena arena = GameController.getInstance().getCurrentArena();
                                 Location safeLocation = null;
                                 while (safeLocation == null) {
-                                    int x = random.nextInt(2 * arena.getMaxRadius()) - arena.getMaxRadius();
-                                    int z = random.nextInt(2 * arena.getMaxRadius()) - arena.getMaxRadius();
+                                    int currentSize = (int) arena.getWorld().getWorldBorder().getSize();
+                                    int x = random.nextInt(2 * currentSize) - currentSize;
+                                    int z = random.nextInt(2 * currentSize) - currentSize;
                                     safeLocation = ServerUtilities.getSafeLocation(new Location(arena.getWorld(), x, 0, z));
                                 }
                                 player.teleport(safeLocation);

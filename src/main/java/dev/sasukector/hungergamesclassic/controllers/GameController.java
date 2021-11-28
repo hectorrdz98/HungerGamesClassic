@@ -228,7 +228,7 @@ public class GameController {
 
     public void gameStart() {
         this.currentStatus = Status.PLAYING;
-        ServerUtilities.sendBroadcastTitle("§bInicia el juego", "PvP en 30 s");
+        ServerUtilities.sendBroadcastTitle("§bInicia el juego", "PvP en 60 s");
         ServerUtilities.playBroadcastSound("mob.wither.spawn", 1, 2);
         this.currentArena.getWorld().getWorldBorder().setSize(this.currentArena.getMaxRadius());
         KitController.getInstance().givePlayersKits();
@@ -240,7 +240,7 @@ public class GameController {
         if (this.pvpEnabledTaskID != -1) {
             Bukkit.getScheduler().cancelTask(this.pvpEnabledTaskID);
         }
-        AtomicInteger remainingTime = new AtomicInteger(30);
+        AtomicInteger remainingTime = new AtomicInteger(60);
         this.pvpEnabledTaskID = new BukkitRunnable() {
             @Override
             public void run() {
@@ -332,9 +332,9 @@ public class GameController {
             @Override
             public void run() {
                 ServerUtilities.sendBroadcastMessage("§5Reduciendo el borde");
-                currentArena.getWorld().getWorldBorder().setSize(currentArena.getLobbyRadius(), 5 * 60);
+                currentArena.getWorld().getWorldBorder().setSize(currentArena.getLobbyRadius(), 10 * 60);
             }
-        }.runTaskLater(HungerGamesClassic.getInstance(), 20L * 60 * 5).getTaskId();
+        }.runTaskLater(HungerGamesClassic.getInstance(), 20L * 60 * 15).getTaskId();
     }
 
 }
