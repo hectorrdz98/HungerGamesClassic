@@ -1,5 +1,6 @@
 package dev.sasukector.hungergamesclassic.models;
 
+import dev.sasukector.hungergamesclassic.HungerGamesClassic;
 import dev.sasukector.hungergamesclassic.controllers.ArenaController;
 import dev.sasukector.hungergamesclassic.controllers.GameController;
 import dev.sasukector.hungergamesclassic.helpers.ServerUtilities;
@@ -49,6 +50,7 @@ public class Arena {
         while (allChests.size() < this.maxChests) {
             int x = random.nextInt(2 * this.maxRadius) - this.maxRadius;
             int z = random.nextInt(2 * this.maxRadius) - this.maxRadius;
+            if (Math.abs(x) < this.lobbyRadius || Math.abs(z) < this.lobbyRadius) continue;
             Location newLocation = ServerUtilities.getSafeLocation(new Location(this.world, x, 0, z));
             if (newLocation == null) continue;
             allChests.add(newLocation);
@@ -115,6 +117,9 @@ public class Arena {
                 this.world.setDifficulty(Difficulty.HARD);
                 this.world.setGameRuleValue("doDaylightCycle", "false");
                 this.world.setGameRuleValue("doWeatherCycle", "false");
+                this.world.setFullTime(0);
+                this.world.setKeepSpawnInMemory(false);
+                this.world.setAutoSave(false);
             }
         }
     }
@@ -170,15 +175,17 @@ public class Arena {
 
     public void deleteWorld() {
         if (this.world != null) {
-            Bukkit.getServer().unloadWorld(this.name, true);
+            Bukkit.getServer().unloadWorld(this.name, false);
         }
-        File dir = new File(this.name);
-        try {
-            FileUtils.deleteDirectory(dir);
-        } catch (Exception e) {
-            Bukkit.getLogger().info(ChatColor.RED + "Error while deleteWorld(): " + e);
-            e.printStackTrace();
-        }
+        Bukkit.getScheduler().runTaskAsynchronously(HungerGamesClassic.getInstance(), () -> {
+            File dir = new File(this.name);
+            try {
+                FileUtils.deleteDirectory(dir);
+            } catch (Exception e) {
+                Bukkit.getLogger().info(ChatColor.RED + "Error while deleteWorld(): " + e);
+                e.printStackTrace();
+            }
+        });
     }
 
 }
