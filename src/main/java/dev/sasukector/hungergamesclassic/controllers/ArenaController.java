@@ -32,7 +32,7 @@ public class ArenaController {
     }
 
     public void createArenas() {
-        Arena arena1 = new Arena("hg_arena_1", new int[]{0, 75, 0}, 60, 1000, 200);
+        Arena arena1 = new Arena("hg_arena_1", new int[]{0, 75, 0}, 60, 1000, 300);
         // Spawn chests
         arena1.getChestLocations().add(new Location(arena1.getWorld(), 3, 69, -5));
         arena1.getChestLocations().add(new Location(arena1.getWorld(), 2, 69, -6));
