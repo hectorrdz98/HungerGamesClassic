@@ -4,6 +4,7 @@ import dev.sasukector.hungergamesclassic.HungerGamesClassic;
 import dev.sasukector.hungergamesclassic.helpers.ServerUtilities;
 import dev.sasukector.hungergamesclassic.models.Arena;
 import lombok.Getter;
+import lombok.Setter;
 import org.bukkit.*;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
@@ -23,7 +24,7 @@ public class GameController {
     private final @Getter List<UUID> alivePlayers;
     private @Getter Arena currentArena = null;
     private @Getter boolean pvpEnabled = false;
-    private final @Getter boolean streamerMode = false;
+    private @Getter @Setter boolean streamerMode = false;
     private int pvpEnabledTaskID = -1;
     private int updateCompassTaskID = -1;
     private int reduceBorderTaskID = -1;
@@ -332,9 +333,9 @@ public class GameController {
             @Override
             public void run() {
                 ServerUtilities.sendBroadcastMessage("§5Reduciendo el borde");
-                currentArena.getWorld().getWorldBorder().setSize(currentArena.getLobbyRadius(), 10 * 60);
+                currentArena.getWorld().getWorldBorder().setSize(currentArena.getLobbyRadius(), 5 * 60);
             }
-        }.runTaskLater(HungerGamesClassic.getInstance(), 20L * 60 * 15).getTaskId();
+        }.runTaskLater(HungerGamesClassic.getInstance(), 20L * 60 * 5).getTaskId();
     }
 
 }

@@ -98,7 +98,8 @@ public class SpawnEvents implements Listener {
                 if (itemStack != null && itemStack.hasItemMeta()) {
                     ItemMeta itemMeta = itemStack.getItemMeta();
                     if (itemStack.getType() == Material.STONE_SWORD && itemMeta.getDisplayName().equals("§dUnirse a cola")) {
-                        if (!GameController.getInstance().getAlivePlayers().contains(player.getUniqueId())) {
+                        if (!GameController.getInstance().getAlivePlayers().contains(player.getUniqueId()) &&
+                            !GameController.getInstance().isStreamerMode()) {
                             player.playSound(player.getLocation(), Sound.NOTE_PIANO, 1, 1);
                             GameController.getInstance().getAlivePlayers().add(player.getUniqueId());
                             int currentQueuePlayers = GameController.getInstance().getAlivePlayers().size();
@@ -108,6 +109,8 @@ public class SpawnEvents implements Listener {
                             player.getInventory().clear();
                             player.getEquipment().setArmorContents(new ItemStack[]{ null, null, null, null });
                             player.updateInventory();
+                        } else {
+                            ServerUtilities.sendServerMessage(player, "§3Está el modo streamer");
                         }
                     }
                 }

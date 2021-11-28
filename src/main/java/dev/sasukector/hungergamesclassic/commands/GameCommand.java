@@ -20,6 +20,7 @@ public class GameCommand implements CommandExecutor {
                         case "start": {
                             if (GameController.getInstance().getCurrentStatus() == GameController.Status.LOBBY) {
                                 player.playSound(player.getLocation(), "note.harp", 1, 1);
+                                ServerUtilities.sendBroadcastMessage("§3§lPartida en modo streamer");
                                 GameController.getInstance().preStartGame();
                             } else {
                                 ServerUtilities.sendServerMessage(player, "§cYa hay una partida en curso");
@@ -31,6 +32,15 @@ public class GameCommand implements CommandExecutor {
                                 GameController.getInstance().stopGame();
                             } else {
                                 ServerUtilities.sendServerMessage(player, "§cNo hay una partida en curso");
+                            }
+                        } break;
+                        case "streamer": {
+                            GameController.getInstance().setStreamerMode(!GameController.getInstance().isStreamerMode());
+                            player.playSound(player.getLocation(), "note.harp", 1, 1);
+                            if (GameController.getInstance().isStreamerMode()) {
+                                ServerUtilities.sendBroadcastMessage("§3Modo streamer §bhabilitado");
+                            } else {
+                                ServerUtilities.sendBroadcastMessage("§3Modo streamer §bdeshabilitado");
                             }
                         } break;
                     }
