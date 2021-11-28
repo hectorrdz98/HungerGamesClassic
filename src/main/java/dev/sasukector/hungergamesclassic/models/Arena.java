@@ -1,6 +1,5 @@
 package dev.sasukector.hungergamesclassic.models;
 
-import dev.sasukector.hungergamesclassic.HungerGamesClassic;
 import dev.sasukector.hungergamesclassic.controllers.ArenaController;
 import dev.sasukector.hungergamesclassic.controllers.GameController;
 import dev.sasukector.hungergamesclassic.helpers.ServerUtilities;
@@ -177,15 +176,13 @@ public class Arena {
         if (this.world != null) {
             Bukkit.getServer().unloadWorld(this.name, false);
         }
-        Bukkit.getScheduler().runTaskAsynchronously(HungerGamesClassic.getInstance(), () -> {
-            File dir = new File(this.name);
-            try {
-                FileUtils.deleteDirectory(dir);
-            } catch (Exception e) {
-                Bukkit.getLogger().info(ChatColor.RED + "Error while deleteWorld(): " + e);
-                e.printStackTrace();
-            }
-        });
+        File dir = new File(this.name);
+        try {
+            FileUtils.deleteDirectory(dir);
+        } catch (Exception e) {
+            Bukkit.getLogger().info(ChatColor.RED + "Error while deleteWorld(): " + e);
+            e.printStackTrace();
+        }
     }
 
 }
