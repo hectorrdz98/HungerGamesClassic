@@ -104,7 +104,7 @@ public class KitEvents implements Listener {
                                 potion_pot.setSplash(true);
                                 potion_pot.apply(potion);
                                 player.getInventory().addItem(potion);
-                                KitController.getInstance().getPlayersTimers().put(player.getUniqueId(), 30);
+                                KitController.getInstance().getPlayersTimers().put(player.getUniqueId(), 60);
                             }
                         } else {
                             player.playSound(player.getLocation(), Sound.ANVIL_BREAK, 1, 2);
@@ -123,7 +123,7 @@ public class KitEvents implements Listener {
                                     safeLocation = ServerUtilities.getSafeLocation(new Location(arena.getWorld(), x, 0, z));
                                 }
                                 player.teleport(safeLocation);
-                                KitController.getInstance().getPlayersTimers().put(player.getUniqueId(), 30);
+                                KitController.getInstance().getPlayersTimers().put(player.getUniqueId(), 180);
                             }
                         } else {
                             player.playSound(player.getLocation(), Sound.ANVIL_BREAK, 1, 2);

@@ -119,6 +119,15 @@ public class ArenaController {
         arena1.getChestLocations().add(new Location(arena1.getWorld(), -427, 63, -37));
         arena1.getChestLocations().add(new Location(arena1.getWorld(), -422, 62, -30));
         arena1.getChestLocations().add(new Location(arena1.getWorld(), -432, 62, -30));
+        arena1.getChestLocations().add(new Location(arena1.getWorld(), -485, 78, -117));
+        arena1.getChestLocations().add(new Location(arena1.getWorld(), -472, 78, -115));
+        arena1.getChestLocations().add(new Location(arena1.getWorld(), -106, 77, -377));
+        arena1.getChestLocations().add(new Location(arena1.getWorld(), -105, 77, -376));
+        arena1.getChestLocations().add(new Location(arena1.getWorld(), -487, 90, -141));
+        arena1.getChestLocations().add(new Location(arena1.getWorld(), -477, 98, -141));
+        arena1.getChestLocations().add(new Location(arena1.getWorld(), -473, 71, -124));
+        arena1.getChestLocations().add(new Location(arena1.getWorld(), -363, 138, -385));
+        arena1.getChestLocations().add(new Location(arena1.getWorld(), -455, 97, -229));
         this.arenas.put("hg_arena_1", arena1);
     }
 
